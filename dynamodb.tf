@@ -1,5 +1,5 @@
 resource "aws_dynamodb_table" "metadata" {
-  name             = join("-", ["octagon-ObjectMetadata", var.environment])
+  name             = join("-", ["ObjectMetadata", var.environment])
   billing_mode     = "PAY_PER_REQUEST"
   hash_key         = "id"
   stream_enabled   = true
