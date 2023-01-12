@@ -14,6 +14,9 @@ variable "enabled" {
   default = true
 }
 
+variable "kms_alias" {
+  default = "demo"
+}
 
 output "key_arn" {
   value = aws_kms_key.my_kms_key.arn
