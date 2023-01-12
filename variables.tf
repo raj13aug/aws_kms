@@ -3,11 +3,11 @@ variable "region" {
 }
 
 variable "user_arn" {
-  default = "arn:aws:iam::932999788441:user/root"
+  default = "arn:aws:iam::932999788441:user/Terraform"
 }
 
 variable "user_arn_root" {
-  default = "arn:aws:iam::932999788441:user/Terraform"
+  default = "arn:aws:iam::932999788441:user/root"
 }
 
 variable "key_spec" {
