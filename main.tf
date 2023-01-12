@@ -16,6 +16,7 @@ resource "aws_kms_key" "my_kms_key" {
   customer_master_key_spec = var.key_spec
   is_enabled               = var.enabled
   enable_key_rotation      = var.rotation_enabled
+  deletion_window_in_days  = 7
 
   tags = {
     Name = "my_kms_key"
