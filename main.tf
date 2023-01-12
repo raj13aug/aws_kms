@@ -11,6 +11,52 @@ provider "aws" {
   region = var.region
 }
 
+data "aws_caller_identity" "current" {}
+
+data "aws_iam_policy_document" "kms" {
+  # Allow root users full management access to key
+  statement {
+    effect = "Allow"
+    actions = [
+      "kms:*"
+    ]
+    resources = ["*"]
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"]
+    }
+  }
+
+  # Allow other accounts limited access to key
+  statement {
+    effect = "Allow"
+    actions = [
+      "kms:Create*",
+      "kms:Describe*",
+      "kms:Enable*",
+      "kms:List*",
+      "kms:Put*",
+      "kms:Update*",
+      "kms:Revoke*",
+      "kms:Disable*",
+      "kms:Get*",
+      "kms:Delete*",
+      "kms:TagResource",
+      "kms:UntagResource",
+      "kms:ScheduleKeyDeletion",
+      "kms:CancelKeyDeletion"
+    ]
+
+    resources = ["*"]
+
+    # AWS account IDs that need access to this key
+    principals {
+      type        = "AWS"
+      identifiers = var.user_arn
+    }
+  }
+}
+
 resource "aws_kms_key" "my_kms_key" {
   description              = "My KMS Keys for Data Encryption"
   customer_master_key_spec = var.key_spec
@@ -22,7 +68,9 @@ resource "aws_kms_key" "my_kms_key" {
     Name = "my_kms_key"
   }
 
-  policy = <<EOF
+  policy = data.aws_iam_policy_document.kms.json
+
+  /* policy = <<EOF
 {
     "Id": "key-consolepolicy-3",
     "Version": "2012-10-17",
@@ -95,7 +143,7 @@ resource "aws_kms_key" "my_kms_key" {
         }
     ]
 }
-EOF
+EOF */
 }
 
 resource "aws_kms_alias" "my_kms_alias" {
