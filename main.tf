@@ -42,7 +42,7 @@ resource "aws_kms_key" "my_kms_key" {
             "Sid": "Allow access for Key Administrators",
             "Effect": "Allow",
             "Principal": {
-                "AWS": ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:Terraform"]
+                "AWS": "${var.user_arn}"
             },
             "Action": [
                 "kms:Create*",
@@ -66,7 +66,7 @@ resource "aws_kms_key" "my_kms_key" {
             "Sid": "Allow use of the key",
             "Effect": "Allow",
             "Principal": {
-                "AWS": ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:Terraform"]
+                "AWS": "${var.user_arn}"
             },
             "Action": [
                 "kms:Encrypt",
@@ -81,7 +81,7 @@ resource "aws_kms_key" "my_kms_key" {
             "Sid": "Allow attachment of persistent resources",
             "Effect": "Allow",
             "Principal": {
-                "AWS": ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:Terraform"]
+                "AWS": "${var.user_arn}"
             },
             "Action": [
                 "kms:CreateGrant",
