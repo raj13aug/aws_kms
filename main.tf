@@ -12,71 +12,6 @@ provider "aws" {
 }
 
 data "aws_caller_identity" "current" {}
-/*
-data "aws_iam_policy_document" "kms" {
-  # Allow root users full management access to key
-  statement {
-    effect = "Allow"
-    actions = [
-      "kms:*"
-    ]
-    resources = ["*"]
-    principals {
-      type        = "AWS"
-      identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"]
-    }
-  }
-
-  # Allow other accounts limited access to key
-  statement {
-    effect = "Allow"
-    actions = [
-      "kms:Create*",
-      "kms:Describe*",
-      "kms:Enable*",
-      "kms:List*",
-      "kms:Put*",
-      "kms:Update*",
-      "kms:Revoke*",
-      "kms:Disable*",
-      "kms:Get*",
-      "kms:Delete*",
-      "kms:TagResource",
-      "kms:UntagResource",
-      "kms:ScheduleKeyDeletion",
-      "kms:CancelKeyDeletion"
-    ]
-
-    resources = ["*"]
-
-    # AWS account IDs that need access to this key
-    principals {
-      type        = "AWS"
-      identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:Terraform"]
-    }
-  }
-
-  statement {
-    sid    = "Allow attachment of persistent resources"
-    effect = "Allow"
-    actions = [
-      "kms:CreateGrant",
-      "kms:ListGrants",
-      "kms:RevokeGrant"
-    ]
-    resources = ["*"]
-
-    principals {
-      type        = "AWS"
-      identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:Terraform"]
-    }
-    condition {
-      test     = "Bool"
-      variable = "kms:GrantIsForAWSResource"
-      values   = ["true"]
-    }
-  }
-} */
 
 resource "aws_kms_key" "my_kms_key" {
   description              = "My KMS Keys for Data Encryption"
@@ -100,7 +35,7 @@ resource "aws_kms_key" "my_kms_key" {
             "Sid": "Enable IAM User Permissions",
             "Effect": "Allow",
             "Principal": {
-                "AWS": ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"]
+                "AWS": ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:${var.user_arn_root}"]
             },
             "Action": "kms:*",
             "Resource": "*"
@@ -109,7 +44,7 @@ resource "aws_kms_key" "my_kms_key" {
             "Sid": "Allow access for Key Administrators",
             "Effect": "Allow",
             "Principal": {
-                "AWS": "${var.user_arn}"
+                "AWS": ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:${var.user_arn}"]
             },
             "Action": [
                 "kms:Create*",
@@ -133,7 +68,7 @@ resource "aws_kms_key" "my_kms_key" {
             "Sid": "Allow use of the key",
             "Effect": "Allow",
             "Principal": {
-                "AWS": "${var.user_arn}"
+                "AWS": ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:${var.user_arn}"]
             },
             "Action": [
                 "kms:Encrypt",
@@ -148,7 +83,7 @@ resource "aws_kms_key" "my_kms_key" {
             "Sid": "Allow attachment of persistent resources",
             "Effect": "Allow",
             "Principal": {
-                "AWS": "${var.user_arn}"
+                "AWS": ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:${var.user_arn}"]
             },
             "Action": [
                 "kms:CreateGrant",
