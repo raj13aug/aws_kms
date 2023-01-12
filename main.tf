@@ -15,7 +15,7 @@ resource "aws_kms_key" "my_kms_key" {
   description              = "My KMS Keys for Data Encryption"
   customer_master_key_spec = var.key_spec
   is_enabled               = var.enabled
-  enable_key_rotation      = var.rotation_enabled
+  #enable_key_rotation      = var.rotation_enabled
 
   tags = {
     Name = "my_kms_key"
