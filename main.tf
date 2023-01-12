@@ -55,6 +55,21 @@ data "aws_iam_policy_document" "kms" {
       identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:Terraform"]
     }
   }
+   
+   statement {
+    sid    = "Allow attachment of persistent resources"
+    effect = "Allow"
+    actions = [
+      "kms:CreateGrant",
+      "kms:ListGrants",
+      "kms:RevokeGrant"
+    ]
+    resources = ["*"]
+
+    principals {
+      type = "AWS"
+      identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:Terraform"]
+    }  
 }
 
 resource "aws_kms_key" "my_kms_key" {
