@@ -3,7 +3,7 @@ variable "region" {
 }
 
 variable "user_arn" {
-  default = "arn:aws:iam::932999788441:user/Terraform"
+  default = "Terraform"
 }
 
 variable "user_arn_root" {
