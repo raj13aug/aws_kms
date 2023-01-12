@@ -24,8 +24,6 @@ resource "aws_kms_key" "my_kms_key" {
     Name = "my_kms_key"
   }
 
-  /* policy = data.aws_iam_policy_document.kms.json */
-
   policy = <<EOF
 {
     "Id": "key-consolepolicy-3",
@@ -35,7 +33,7 @@ resource "aws_kms_key" "my_kms_key" {
             "Sid": "Enable IAM User Permissions",
             "Effect": "Allow",
             "Principal": {
-                "AWS": "arn:aws:iam::${data.aws_caller_identity.current.account_id}:${var.user_arn_root}"
+                "AWS": ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"]
             },
             "Action": "kms:*",
             "Resource": "*"
@@ -44,7 +42,7 @@ resource "aws_kms_key" "my_kms_key" {
             "Sid": "Allow access for Key Administrators",
             "Effect": "Allow",
             "Principal": {
-                "AWS": "arn:aws:iam::${data.aws_caller_identity.current.account_id}:${var.user_arn}"
+                "AWS": "arn:aws:iam::${data.aws_caller_identity.current.account_id}:Terraform"
             },
             "Action": [
                 "kms:Create*",
@@ -68,7 +66,7 @@ resource "aws_kms_key" "my_kms_key" {
             "Sid": "Allow use of the key",
             "Effect": "Allow",
             "Principal": {
-                "AWS": "arn:aws:iam::${data.aws_caller_identity.current.account_id}:${var.user_arn}"
+                "AWS": "arn:aws:iam::${data.aws_caller_identity.current.account_id}:Terraform"
             },
             "Action": [
                 "kms:Encrypt",
@@ -83,7 +81,7 @@ resource "aws_kms_key" "my_kms_key" {
             "Sid": "Allow attachment of persistent resources",
             "Effect": "Allow",
             "Principal": {
-                "AWS": "arn:aws:iam::${data.aws_caller_identity.current.account_id}:${var.user_arn}"
+                "AWS": "arn:aws:iam::${data.aws_caller_identity.current.account_id}:Terraform"
             },
             "Action": [
                 "kms:CreateGrant",
