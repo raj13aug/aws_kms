@@ -12,7 +12,7 @@ provider "aws" {
 }
 
 data "aws_caller_identity" "current" {}
-
+/*
 data "aws_iam_policy_document" "kms" {
   # Allow root users full management access to key
   statement {
@@ -76,7 +76,7 @@ data "aws_iam_policy_document" "kms" {
       values   = ["true"]
     }
   }
-}
+} */
 
 resource "aws_kms_key" "my_kms_key" {
   description              = "My KMS Keys for Data Encryption"
@@ -89,9 +89,9 @@ resource "aws_kms_key" "my_kms_key" {
     Name = "my_kms_key"
   }
 
-  policy = data.aws_iam_policy_document.kms.json
+  /* policy = data.aws_iam_policy_document.kms.json */
 
-  /* policy = <<EOF
+  policy = <<EOF
 {
     "Id": "key-consolepolicy-3",
     "Version": "2012-10-17",
@@ -100,7 +100,7 @@ resource "aws_kms_key" "my_kms_key" {
             "Sid": "Enable IAM User Permissions",
             "Effect": "Allow",
             "Principal": {
-                "AWS": "${var.user_arn_root}"
+                "AWS": ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"]
             },
             "Action": "kms:*",
             "Resource": "*"
@@ -164,7 +164,7 @@ resource "aws_kms_key" "my_kms_key" {
         }
     ]
 }
-EOF */
+EOF
 }
 
 resource "aws_kms_alias" "my_kms_alias" {
