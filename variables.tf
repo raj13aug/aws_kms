@@ -29,8 +29,3 @@ variable "environment" {
 variable "rotation_enabled" {
   default = true
 }
-
-
-output "key_arn" {
-  value = aws_kms_key.my_kms_key.arn
-}
