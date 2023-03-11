@@ -15,9 +15,9 @@ data "aws_caller_identity" "current" {}
 
 resource "aws_kms_key" "my_kms_key" {
   description              = "My KMS Keys for Data Encryption"
-  customer_master_key_spec = var.key_spec
-  is_enabled               = var.enabled
-  enable_key_rotation      = var.rotation_enabled
+  customer_master_key_spec = var.key_spec         #SYMMETRIC_DEFAULT
+  is_enabled               = var.enabled          # true
+  enable_key_rotation      = var.rotation_enabled # true
   deletion_window_in_days  = 7
 
   tags = {
